@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.0 # Optional for state management
+  http: ^0.13.3  # For making API calls
+  provider: ^6.0.0  # For state management (optional)
+
 
 
 

@@ -1,24 +1,31 @@
+import 'dart:io';
+
+import 'package:crud_app/models/form_page.dart';
+import 'package:crud_app/models/item.dart';
 import 'package:flutter/material.dart';
-import 'item.dart';
 import 'api_service.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CRUD App',
       theme: ThemeData(primarySwatch: Colors.green),
-      home: ItemList(),
+      home: const ItemList(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class ItemList extends StatefulWidget {
+  const ItemList({super.key});
+
   @override
   _ItemListState createState() => _ItemListState();
 }
@@ -35,100 +42,51 @@ class _ItemListState extends State<ItemList> {
   }
 
   Future<void> _fetchItems() async {
-    items = await apiService.fetchItems();
-    setState(() {});
+   items = await apiService.fetchItems();
+   print(items);
   }
 
-  void _addItem() async {
-    final newItem = Item(id: '', name: _controller.text);
-    final createdItem = await apiService.createItem(newItem);
-    setState(() {
-      items.add(createdItem);
-    });
-    _controller.clear();
-  }
-
-  void _updateItem(Item item) async {
-    final updatedItem = Item(id: item.id, name: _controller.text);
-    await apiService.updateItem(updatedItem);
-    _fetchItems();
-  }
-
-  void _deleteItem(String id) async {
-    await apiService.deleteItem(id);
-    _fetchItems();
-  }
-
-  void _showDialog({Item? item}) {
-    if (item != null) {
-      _controller.text = item.name;
-    } else {
-      _controller.clear();
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(item == null ? 'Add Item' : 'Update Item'),
-          content: TextField(
-            controller: _controller,
-            decoration: InputDecoration(hintText: 'Item name'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (item == null) {
-                  _addItem();
-                } else {
-                  _updateItem(item);
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text(item == null ? 'Add' : 'Update'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CRUD App with API'),
+        title: Container(
+            alignment: Alignment.center,
+            child: Text('CRUD App',)),
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add), // Replace with your desired icon
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductFormPage()),);
+            },
+          ),
+        ],
       ),
-      body: ListView.builder(
+      body:
+      ListView.separated(
         itemCount: items.length,
         itemBuilder: (context, index) {
           final item = items[index];
           return ListTile(
-            title: Text(item.name),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+            title: Row(
               children: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () => _showDialog(item: item),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => _deleteItem(item.id),
-                ),
+                Text(item.productname.toString()),
+
+                Expanded(child: Text(item.productcode as String)),
               ],
             ),
+            subtitle: Text(item.price as String,style: TextStyle(
+              fontSize: 15,
+            ),),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showDialog(),
-        child: Icon(Icons.add),
-      ),
+        }, separatorBuilder: (BuildContext context, int index) {
+          return Divider();
+      },
+      )
     );
   }
 }

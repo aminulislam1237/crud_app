@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+// lib/services/api_service.dart
 import 'dart:convert';
-import 'item.dart';
+import 'package:crud_app/models/item.dart';
+import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = 'https://yourapi.com/api/items';
 
-  get http => null; // Replace with your API endpoint
+  final String baseUrl = 'https://jsonplaceholder.typicode.com/posts';
 
   Future<List<Item>> fetchItems() async {
     final response = await http.get(Uri.parse(baseUrl));
@@ -17,43 +17,27 @@ class ApiService {
     }
   }
 
-  Future<Item> createItem(Item item) async {
-    final response = await http.post(
+  Future<void> createItem(Item item) async {
+    await http.post(
       Uri.parse(baseUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(item.toJson()),
     );
-
-    if (response.statusCode == 201) {
-      return Item.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to create item');
-    }
   }
 
-  Future<Item> updateItem(Item item) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/${item.id}'),
+  Future<void> updateItem(Item item) async {
+    await http.put(
+      Uri.parse('$baseUrl/${item.productname}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(item.toJson()),
     );
-
-    if (response.statusCode == 200) {
-      return Item.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to update item');
-    }
   }
 
-  Future<void> deleteItem(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/$id'));
-
-    if (response.statusCode != 204) {
-      throw Exception('Failed to delete item');
-    }
+  Future<void> deleteItem(int id) async {
+    await http.delete(Uri.parse('$baseUrl/$id'));
   }
 }
