@@ -25,7 +25,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Form'),
+        title: Text('Add Product'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -47,6 +47,18 @@ class _ProductFormPageState extends State<ProductFormPage> {
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Product Code'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the product code';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _productCode = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Image url'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the product code';

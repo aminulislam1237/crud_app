@@ -15,8 +15,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CRUD App',
-      theme: ThemeData(primarySwatch: Colors.green),
       home: const ItemList(),
       debugShowCheckedModeBanner: false,
     );
@@ -53,16 +51,29 @@ class _ItemListState extends State<ItemList> {
       appBar: AppBar(
         title: Container(
             alignment: Alignment.center,
-            child: Text('CRUD App',)),
-        backgroundColor: Colors.blue,
+            child: Text('CRUD APP',style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),)),
+        backgroundColor: Colors.greenAccent,
         actions: [
-          IconButton(
-            icon: Icon(Icons.add), // Replace with your desired icon
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProductFormPage()),);
-            },
+          Row(
+            children: [
+              IconButton(
+      icon: Icon(Icons.refresh),
+                  onPressed: (){
+        //getiteam();
+                  },),
+              IconButton(
+                icon: Icon(Icons.add), // Replace with your desired icon
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProductFormPage()),);
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -75,13 +86,17 @@ class _ItemListState extends State<ItemList> {
             title: Row(
               children: [
                 Text(item.productname.toString()),
-
-                Expanded(child: Text(item.productcode as String)),
+                Text(item.productcode.toString()),
+                Text(item.imageurl.toString()),
+                Text(item.quantity.toString()),
+                Text(item.price.toString()),
+                Divider()
               ],
             ),
-            subtitle: Text(item.price as String,style: TextStyle(
+            subtitle: Text(item.toatal as String,style: TextStyle(
               fontSize: 15,
             ),),
+            leading: Icon(Icons.edit),
           );
         }, separatorBuilder: (BuildContext context, int index) {
           return Divider();
